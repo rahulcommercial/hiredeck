@@ -21,7 +21,10 @@ class Settings(BaseSettings):
     anthropic_api_key: str = ""
     anthropic_model: str = "claude-sonnet-4-6"
     max_upload_mb: int = 5
-    allowed_origins: str = "http://localhost:3000"
+    allowed_origins: str = (
+        "http://localhost:3000,http://localhost:3001,"
+        "http://localhost:3002,http://localhost:3003"
+    )
 
     model_config = SettingsConfigDict(extra="ignore")
 
