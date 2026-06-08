@@ -1,0 +1,8 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# Build scripts to permit (security feature in newer pnpm).
+allowBuilds:
+  sharp: true
+  unrs-resolver: true

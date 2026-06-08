@@ -1,0 +1,26 @@
+{
+  "name": "hiredeck",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Open-source AI-powered resume builder. Upload, refine, and land.",
+  "license": "MIT",
+  "author": "Rahul Kumar Singh <rahulcommercial@gmail.com>",
+  "homepage": "https://github.com/rahulcommercial/hiredeck",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rahulcommercial/hiredeck.git"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @hiredeck/web dev",
+    "dev:api": "pnpm --filter @hiredeck/api dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "clean": "pnpm -r exec rm -rf node_modules .next dist .turbo"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@11.5.2"
+}

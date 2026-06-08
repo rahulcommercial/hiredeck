@@ -1,0 +1,25 @@
+{
+  "name": "@hiredeck/templates",
+  "version": "0.1.0",
+  "description": "Hiredeck resume templates. Each template renders a Resume to React.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./atlas": "./src/atlas/index.tsx"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'no-op'"
+  },
+  "peerDependencies": {
+    "react": "^19",
+    "@hiredeck/schema": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "typescript": "^5"
+  }
+}
