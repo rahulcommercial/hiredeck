@@ -1,246 +1,153 @@
 /**
- * Atlas — modern, minimal, single-column.
- *
- * Reference implementation. Every other template should follow the same
- * contract: a default-exported React component that takes `{ resume }` and
- * renders a print-ready A4/Letter page using Tailwind utilities only.
+ * Atlas — minimal, single-column, accent-led.
+ * Best for engineers, designers, generalists. ATS-friendly.
  */
-import type { Resume, Work, Education, Project, Skill } from "@hiredeck/schema";
+import type { Resume } from "@hiredeck/schema";
+import { fmtDateRange, joinLoc, trimProto } from "../_shared";
 
-interface Props {
-  resume: Resume;
-}
-
-function fmtDateRange(start?: string, end?: string): string {
-  if (!start && !end) return "";
-  const fmt = (d?: string) => {
-    if (!d) return "Present";
-    const [y, m] = d.split("-");
-    if (!m) return y!;
-    const month = new Date(`${d}-01`).toLocaleString("en-US", { month: "short" });
-    return `${month} ${y}`;
-  };
-  return `${fmt(start)} – ${fmt(end)}`;
-}
-
-function SectionHeading({ children }: { children: React.ReactNode }) {
-  return (
-    <h2 className="mb-3 mt-6 border-b border-slate-200 pb-1 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-900">
-      {children}
-    </h2>
-  );
-}
-
-function WorkBlock({ w }: { w: Work }) {
-  return (
-    <div className="mb-4 break-inside-avoid">
-      <div className="flex items-baseline justify-between gap-4">
-        <div>
-          <div className="text-[13px] font-semibold text-slate-900">{w.position}</div>
-          <div className="text-[12px] italic text-sky-700">{w.name}</div>
-        </div>
-        <div className="whitespace-nowrap text-[11px] text-slate-500">
-          {fmtDateRange(w.startDate, w.endDate)}
-        </div>
-      </div>
-      {w.summary && <p className="mt-1 text-[12px] leading-relaxed text-slate-700">{w.summary}</p>}
-      {w.highlights.length > 0 && (
-        <ul className="mt-1.5 space-y-1">
-          {w.highlights.map((h, i) => (
-            <li key={i} className="flex gap-2 text-[12px] leading-relaxed text-slate-700">
-              <span className="mt-1.5 inline-block h-1 w-1 shrink-0 rounded-full bg-sky-600" />
-              <span>{h}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}
-
-function EduBlock({ e }: { e: Education }) {
-  return (
-    <div className="mb-3 break-inside-avoid">
-      <div className="flex items-baseline justify-between gap-4">
-        <div>
-          <div className="text-[13px] font-semibold text-slate-900">
-            {e.studyType}
-            {e.area ? `, ${e.area}` : ""}
-          </div>
-          <div className="text-[12px] italic text-slate-600">{e.institution}</div>
-        </div>
-        <div className="whitespace-nowrap text-[11px] text-slate-500">
-          {e.score ?? fmtDateRange(e.startDate, e.endDate)}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ProjectBlock({ p }: { p: Project }) {
-  return (
-    <div className="mb-3 break-inside-avoid">
-      <div className="flex items-baseline justify-between gap-4">
-        <div className="text-[13px] font-semibold text-slate-900">{p.name}</div>
-        {p.keywords.length > 0 && (
-          <div className="text-[11px] italic text-slate-500">{p.keywords.join(" · ")}</div>
-        )}
-      </div>
-      {p.description && <p className="mt-1 text-[12px] leading-relaxed text-slate-700">{p.description}</p>}
-    </div>
-  );
-}
-
-function SkillBlock({ s }: { s: Skill }) {
-  return (
-    <div className="mb-1.5 text-[12px] leading-relaxed">
-      <span className="font-semibold text-slate-900">{s.name}</span>
-      {s.keywords.length > 0 && (
-        <span className="text-slate-700"> · {s.keywords.join(", ")}</span>
-      )}
-    </div>
-  );
-}
+interface Props { resume: Resume }
 
 export function Atlas({ resume }: Props) {
-  const { basics, work, education, projects, skills, awards, languages, interests } = resume;
+  const { basics, work, education, projects, skills, awards, languages } = resume;
   const accent = resume.meta?.hiredeck?.accentColor ?? "#2E75B6";
 
   return (
     <article
       className="mx-auto bg-white text-slate-900"
-      style={{
-        width: "8.5in",
-        minHeight: "11in",
-        padding: "0.6in 0.75in",
-        fontFamily:
-          "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
-      }}
+      style={{ width: "8.5in", minHeight: "11in", padding: "0.55in 0.75in",
+        fontFamily: "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif" }}
     >
-      {/* ============== Header ============== */}
-      <header className="mb-4 border-b-2 pb-4" style={{ borderColor: accent }}>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900">{basics.name || "Your Name"}</h1>
+      {/* Header */}
+      <header className="mb-5">
+        <h1 className="text-[28px] font-bold leading-tight tracking-tight text-slate-900">
+          {basics.name || "Your Name"}
+        </h1>
         {basics.label && (
-          <p className="mt-1 text-[13px] uppercase tracking-[0.22em]" style={{ color: accent }}>
+          <p className="mt-1 text-[12px] font-medium uppercase tracking-[0.18em]" style={{ color: accent }}>
             {basics.label}
           </p>
         )}
-        <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-slate-600">
-          {basics.location && (
-            <span>
-              {[basics.location.city, basics.location.region, basics.location.countryCode]
-                .filter(Boolean)
-                .join(", ")}
-            </span>
-          )}
-          {basics.phone && <><span className="text-slate-300">·</span><span>{basics.phone}</span></>}
-          {basics.email && (
-            <>
-              <span className="text-slate-300">·</span>
-              <a href={`mailto:${basics.email}`} className="hover:underline">
-                {basics.email}
-              </a>
-            </>
-          )}
-          {basics.url && (
-            <>
-              <span className="text-slate-300">·</span>
-              <a href={basics.url} className="hover:underline">
-                {basics.url.replace(/^https?:\/\//, "")}
-              </a>
-            </>
-          )}
-          {basics.profiles.map((p, i) => (
-            <span key={i} className="flex gap-3">
-              <span className="text-slate-300">·</span>
-              <a href={p.url} className="hover:underline">
-                {p.network}
-                {p.username ? ` / ${p.username}` : ""}
-              </a>
-            </span>
-          ))}
+        <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[10.5px] text-slate-600">
+          {joinLoc(basics.location) && <span>{joinLoc(basics.location)}</span>}
+          {basics.phone && <span className="text-slate-300">·</span>}
+          {basics.phone && <span>{basics.phone}</span>}
+          {basics.email && <span className="text-slate-300">·</span>}
+          {basics.email && <span>{basics.email}</span>}
+          {basics.url && <span className="text-slate-300">·</span>}
+          {basics.url && <span>{trimProto(basics.url)}</span>}
         </div>
+        <div className="mt-3 h-[2px] w-full" style={{ background: accent }} />
       </header>
 
-      {/* ============== Summary ============== */}
       {basics.summary && (
-        <>
-          <SectionHeading>Profile</SectionHeading>
-          <p className="text-[12px] leading-relaxed text-slate-700">{basics.summary}</p>
-        </>
+        <Section title="Profile" accent={accent}>
+          <p className="text-[11.5px] leading-relaxed text-slate-700">{basics.summary}</p>
+        </Section>
       )}
 
-      {/* ============== Experience ============== */}
       {work.length > 0 && (
-        <>
-          <SectionHeading>Experience</SectionHeading>
-          {work.map((w, i) => <WorkBlock key={i} w={w} />)}
-        </>
+        <Section title="Experience" accent={accent}>
+          {work.map((w, i) => (
+            <div key={i} className="mb-3.5 break-inside-avoid">
+              <div className="flex items-baseline justify-between gap-4">
+                <div>
+                  <div className="text-[12.5px] font-semibold text-slate-900">{w.position}</div>
+                  <div className="text-[11.5px] italic" style={{ color: accent }}>{w.name}</div>
+                </div>
+                <div className="whitespace-nowrap text-[10.5px] text-slate-500">{fmtDateRange(w.startDate, w.endDate)}</div>
+              </div>
+              {w.summary && <p className="mt-1 text-[11.5px] leading-relaxed text-slate-700">{w.summary}</p>}
+              {w.highlights.length > 0 && (
+                <ul className="mt-1 space-y-[3px]">
+                  {w.highlights.map((h, j) => (
+                    <li key={j} className="flex gap-2 text-[11.5px] leading-relaxed text-slate-700">
+                      <span className="mt-[6px] inline-block h-[3px] w-[3px] shrink-0 rounded-full" style={{ background: accent }} />
+                      <span>{h}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </Section>
       )}
 
-      {/* ============== Projects ============== */}
       {projects.length > 0 && (
-        <>
-          <SectionHeading>Selected Projects</SectionHeading>
-          {projects.map((p, i) => <ProjectBlock key={i} p={p} />)}
-        </>
+        <Section title="Selected Projects" accent={accent}>
+          {projects.map((p, i) => (
+            <div key={i} className="mb-2 break-inside-avoid">
+              <div className="flex items-baseline justify-between gap-4">
+                <div className="text-[12px] font-semibold text-slate-900">{p.name}</div>
+                {p.keywords.length > 0 && <div className="text-[10.5px] italic text-slate-500">{p.keywords.join(" · ")}</div>}
+              </div>
+              {p.description && <p className="mt-0.5 text-[11.5px] leading-relaxed text-slate-700">{p.description}</p>}
+            </div>
+          ))}
+        </Section>
       )}
 
-      {/* ============== Skills ============== */}
       {skills.length > 0 && (
-        <>
-          <SectionHeading>Technical Skills</SectionHeading>
-          {skills.map((s, i) => <SkillBlock key={i} s={s} />)}
-        </>
+        <Section title="Technical Skills" accent={accent}>
+          <div className="space-y-1">
+            {skills.map((s, i) => (
+              <div key={i} className="text-[11.5px] leading-relaxed">
+                <span className="font-semibold text-slate-900">{s.name}</span>
+                {s.keywords.length > 0 && <span className="text-slate-700">{"  ·  "}{s.keywords.join(", ")}</span>}
+              </div>
+            ))}
+          </div>
+        </Section>
       )}
 
-      {/* ============== Education ============== */}
       {education.length > 0 && (
-        <>
-          <SectionHeading>Education</SectionHeading>
-          {education.map((e, i) => <EduBlock key={i} e={e} />)}
-        </>
+        <Section title="Education" accent={accent}>
+          {education.map((e, i) => (
+            <div key={i} className="flex items-baseline justify-between gap-4">
+              <div>
+                <div className="text-[12px] font-semibold text-slate-900">
+                  {e.studyType}{e.area ? `, ${e.area}` : ""}
+                </div>
+                <div className="text-[11.5px] italic text-slate-600">{e.institution}</div>
+              </div>
+              <div className="whitespace-nowrap text-[10.5px] text-slate-500">{e.score ?? fmtDateRange(e.startDate, e.endDate)}</div>
+            </div>
+          ))}
+        </Section>
       )}
 
-      {/* ============== Awards ============== */}
       {awards.length > 0 && (
-        <>
-          <SectionHeading>Recognition</SectionHeading>
+        <Section title="Recognition" accent={accent}>
           <ul className="space-y-1">
             {awards.map((a, i) => (
-              <li key={i} className="text-[12px] leading-relaxed text-slate-700">
+              <li key={i} className="text-[11.5px] leading-relaxed text-slate-700">
                 <span className="font-semibold text-slate-900">{a.title}</span>
                 {a.awarder && <span className="text-slate-500"> · {a.awarder}</span>}
-                {a.summary && <span className="text-slate-700"> — {a.summary}</span>}
+                {a.summary && <span> — {a.summary}</span>}
               </li>
             ))}
           </ul>
-        </>
+        </Section>
       )}
 
-      {/* ============== Languages & Interests ============== */}
-      {(languages.length > 0 || interests.length > 0) && (
-        <>
-          <SectionHeading>More</SectionHeading>
-          {languages.length > 0 && (
-            <div className="mb-1 text-[12px] leading-relaxed">
-              <span className="font-semibold text-slate-900">Languages</span>
-              {" · "}
-              {languages.map((l) => `${l.language}${l.fluency ? ` (${l.fluency})` : ""}`).join(", ")}
-            </div>
-          )}
-          {interests.length > 0 && (
-            <div className="text-[12px] leading-relaxed">
-              <span className="font-semibold text-slate-900">Interests</span>
-              {" · "}
-              {interests.map((i) =>
-                i.keywords.length > 0 ? `${i.name} (${i.keywords.join(", ")})` : i.name
-              ).join(", ")}
-            </div>
-          )}
-        </>
+      {languages.length > 0 && (
+        <Section title="Languages" accent={accent}>
+          <p className="text-[11.5px] text-slate-700">
+            {languages.map((l) => `${l.language}${l.fluency ? ` (${l.fluency})` : ""}`).join(" · ")}
+          </p>
+        </Section>
       )}
     </article>
+  );
+}
+
+function Section({ title, accent, children }: { title: string; accent: string; children: React.ReactNode }) {
+  return (
+    <section className="mb-3">
+      <h2 className="mb-1.5 text-[10.5px] font-bold uppercase tracking-[0.22em]" style={{ color: accent }}>
+        {title}
+      </h2>
+      {children}
+    </section>
   );
 }
 
