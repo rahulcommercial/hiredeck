@@ -10,6 +10,11 @@ import { Onyx } from "./onyx";
 import { Mesa } from "./mesa";
 import { Granite } from "./granite";
 import { Junction } from "./junction";
+import { Vista } from "./vista";
+import { Marble } from "./marble";
+import { Ember } from "./ember";
+import { Meridian } from "./meridian";
+import { Cobalt } from "./cobalt";
 
 export interface TemplateMeta {
   id: string;
@@ -27,7 +32,7 @@ export const TEMPLATES: Record<string, TemplateMeta> = {
     id: "atlas",
     name: "Atlas",
     tagline: "Minimal · single-column · ATS-friendly",
-    vibe: "clean · minimal · accent",
+    vibe: "clean · minimal",
     defaultAccent: "#2E75B6",
     Component: Atlas,
   },
@@ -35,31 +40,71 @@ export const TEMPLATES: Record<string, TemplateMeta> = {
     id: "onyx",
     name: "Onyx",
     tagline: "Dark hero · numbered sections · premium",
-    vibe: "bold · executive · branded",
+    vibe: "bold · executive",
     defaultAccent: "#2E75B6",
     Component: Onyx,
+  },
+  vista: {
+    id: "vista",
+    name: "Vista",
+    tagline: "Dark sidebar · photo / initials · cyan accents",
+    vibe: "branded · modern",
+    defaultAccent: "#38BDF8",
+    Component: Vista,
   },
   mesa: {
     id: "mesa",
     name: "Mesa",
     tagline: "Two-column · sidebar · structured",
-    vibe: "modern · organised · scannable",
+    vibe: "modern · scannable",
     defaultAccent: "#0F766E",
     Component: Mesa,
+  },
+  cobalt: {
+    id: "cobalt",
+    name: "Cobalt",
+    tagline: "Blue sidebar · monogram · corporate",
+    vibe: "corporate · professional",
+    defaultAccent: "#1E40AF",
+    Component: Cobalt,
   },
   granite: {
     id: "granite",
     name: "Granite",
     tagline: "Formal · serif · executive",
-    vibe: "classic · refined · timeless",
+    vibe: "classic · refined",
     defaultAccent: "#1F2937",
     Component: Granite,
+  },
+  marble: {
+    id: "marble",
+    name: "Marble",
+    tagline: "Elegant centered serif · editorial",
+    vibe: "elegant · editorial",
+    defaultAccent: "#1F2937",
+    Component: Marble,
+  },
+  ember: {
+    id: "ember",
+    name: "Ember",
+    tagline: "Coral accents · bold · results-led",
+    vibe: "impact · warm",
+    defaultAccent: "#F87171",
+    Component: Ember,
+  },
+  meridian: {
+    id: "meridian",
+    name: "Meridian",
+    tagline: "Vertical timeline · icons · narrative flow",
+    vibe: "narrative · structured",
+    defaultAccent: "#111827",
+    Component: Meridian,
   },
   junction: {
     id: "junction",
     name: "Junction",
     tagline: "Tech lead · keyword pills · left accent rail",
-    vibe: "engineering · modern · confident",
+    vibe: "engineering · modern",
     defaultAccent: "#7C3AED",
     Component: Junction,
   },
@@ -75,3 +120,8 @@ export { Onyx } from "./onyx";
 export { Mesa } from "./mesa";
 export { Granite } from "./granite";
 export { Junction } from "./junction";
+export { Vista } from "./vista";
+export { Marble } from "./marble";
+export { Ember } from "./ember";
+export { Meridian } from "./meridian";
+export { Cobalt } from "./cobalt";
